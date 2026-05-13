@@ -1,47 +1,82 @@
-    // Get form values
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let subject = document.getElementById("subject").value.trim();
-    let message = document.getElementById("message").value.trim();
+emailjs.init("zZ4n2Itiz20QjzYBf");
 
-    // Validation
-    if (!name) {
-      alert("Name cannot be blank!");
-      return;
-    }
+document.querySelector(".contact-form").addEventListener("submit", function (event) {
 
-    if (!email) {
-      alert("Email cannot be blank!");
-      return;
-    }
+  event.preventDefault();
 
-    if (!subject) {
-      alert("Subject cannot be blank!");
-      return;
-    }
+  let name = document.getElementById("name").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let subject = document.getElementById("subject").value.trim();
+  let message = document.getElementById("message").value.trim();
 
-    if (!message) {
-      alert("Message cannot be blank!");
-      return;
-    }
+  let nameError = document.getElementById("nameError");
+  let emailError = document.getElementById("emailError");
+  let subjectError = document.getElementById("subjectError");
+  let messageError = document.getElementById("messageError");
 
-    // Prepare params for EmailJS
-    let params = {
-      name,
-      email,
-      subject,
-      message,
-    };
+  nameError.innerText = "";
+  emailError.innerText = "";
+  subjectError.innerText = "";
+  messageError.innerText = "";
 
-    // Send email using EmailJS
-    emailjs
-      .send("service_vtkr2cn", "template_879uhv8", params)
-      .then(() => {
-        alert("Email has been sent!");
-        document.getElementsByClassName("contact-form")[0].reset().preventDefault(); // Reset form after success
-      })
-      .catch((error) => {
-        alert("Oops! Something went wrong.");
-        console.error("Error:", error);
-      });
+  let isValid = true;
+
+  let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+  if (!name) {
+    nameError.innerText = "Name is required";
+    isValid = false;
+  }
+
+  if (!email) {
+    emailError.innerText = "Email is required";
+    isValid = false;
+  }
+
+  else if (!emailPattern.test(email)) {
+    emailError.innerText = "Enter valid email";
+    isValid = false;
+  }
+
+  if (!subject) {
+    subjectError.innerText = "Subject is required";
+    isValid = false;
+  }
+
+  if (!message) {
+    messageError.innerText = "Message is required";
+    isValid = false;
+  }
+
+  if (!isValid) return;
+
+  let params = {
+    name: name,
+    email: email,
+    subject: subject,
+    message: message
+  };
+
+  emailjs.send(
+    "service_vlmvlet",
+    "template_xjlgr9j",
+    params
+  )
+
+  .then(function () {
+
+    alert("Email Sent Successfully!");
+
+    document.querySelector(".contact-form").reset();
+
+  })
+
+  .catch(function (error) {
+
+    console.log(error);
+
+    alert("Failed to send email");
+
   });
+
+});
